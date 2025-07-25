@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal Future Teller</title>
+  <meta name="description" content="Discover your personalized fortune with our fun and vibrant future teller website." />
+  <meta name="keywords" content="fortune teller, future, prediction, fun app, mystic, astrology" />
+  <meta name="author" content="Mystic Devs" />
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1079/1079684.png" type="image/png" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      overflow-x: hidden;
+      transition: background 1s ease;
+    }
+    header {
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
+      color: white;
+      padding: 1.5rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fff7e6;
+      color: #333;
+      padding: 1rem;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    .cookie-banner button {
+      background: #ffa726;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .container {
+      padding: 2rem;
+    }
+    .input-box {
+      margin-top: 1.5rem;
+    }
+    input, select {
+      padding: 0.7rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      border: 2px solid #ff9a8b;
+      border-radius: 5px;
+      background: #fffaf0;
+    }
+    .fortune-box {
+      margin-top: 2rem;
+      padding: 2rem;
+      background: #ffffffdd;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      border-radius: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease-in-out;
+      font-size: 1.2rem;
+    }
+    .fortune-box.show {
+      opacity: 1;
+      transform: translateY(0);
+      animation: sparkle 1.2s ease-out;
+    }
+    button {
+      background: #ff6f61;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #e85a4f;
+    }
+    .ad-banner {
+      margin: 1rem auto;
+      max-width: 728px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes sparkle {
+      0% { filter: brightness(0.5); transform: scale(0.9); }
+      100% { filter: brightness(1); transform: scale(1); }
+    }
+    .share-btn {
+      display: none;
+      margin-top: 1rem;
+    }
+    .share-btn.show {
+      display: inline-block;
+    }
+    .lang-select {
+      margin-top: 1rem;
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+
+  <header>Your Personal Future Teller 🔮</header>
+
+  <div class="ad-banner">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2133210568167397"
+         data-ad-slot="6524718111"></ins>
+         data-ad-format="autorelaxed"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+  <div class="container">
+    <div class="input-box">
+      <input type="text" id="name" placeholder="Your Name" />
+      <input type="date" id="birthdate" />
+      <select id="category">
+        <option value="general">General</option>
+        <option value="love">Love</option>
+        <option value="career">Career</option>
+        <option value="travel">Travel</option>
+      </select>
+      <select id="language" class="lang-select">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ro">Română</option>
+        <option value="pl">Polski</option>
+      </select>
+    </div>
+    <button onclick="tellFuture()">Reveal My Future</button>
+    <button id="shareBtn" class="share-btn" onclick="shareFortune()">📋 Copy Fortune</button>
+    <button onclick="shareTwitter()">🐦 Share on Twitter</button>
+    <button onclick="shareWhatsApp()">💬 Share on WhatsApp</button>
+
+    <div class="fortune-box" id="fortune">
+      Enter your details and click the button to see your future!
+    </div>
+  </div>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <span>We use cookies to improve your experience. By using this site, you accept our cookie policy.</span>
+    <button onclick="acceptCookies()">Accept</button>
+  </div>
+
+  <script>
+    function acceptCookies() {
+      document.getElementById("cookieBanner").style.display = "none";
+      localStorage.setItem("cookiesAccepted", "true");
+    }
+
+    window.onload = () => {
+      const last = localStorage.getItem("lastFortune");
+      const accepted = localStorage.getItem("cookiesAccepted");
+      if (last) {
+        const fortuneEl = document.getElementById('fortune');
+        const shareBtn = document.getElementById('shareBtn');
+        fortuneEl.innerText = last;
+        fortuneEl.classList.add("show");
+        shareBtn.classList.add("show");
+      }
+      if (accepted) document.getElementById("cookieBanner").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
+
