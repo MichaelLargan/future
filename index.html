@@ -79,18 +79,6 @@
       margin: 2rem auto;
       max-width: 800px;
     }
-    .input-box {
-      margin-top: 1.5rem;
-    }
-    input, select {
-      padding: 0.7rem;
-      margin: 0.5rem;
-      font-size: 1rem;
-      border: 2px solid #bb86fc;
-      border-radius: 5px;
-      background: #1f0033;
-      color: #fff;
-    }
     .fortune-box {
       margin-top: 2rem;
       padding: 2rem;
@@ -136,16 +124,6 @@
       0% { filter: brightness(0.5); transform: scale(0.9); }
       100% { filter: brightness(1.2); transform: scale(1); }
     }
-    .share-btn {
-      display: none;
-      margin-top: 1rem;
-    }
-    .share-btn.show {
-      display: inline-block;
-    }
-    .lang-select {
-      margin-top: 1rem;
-    }
     .ai-images {
       display: flex;
       flex-wrap: wrap;
@@ -157,6 +135,40 @@
       width: 220px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .share-links {
+      margin-top: 1.5rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease-in-out;
+    }
+    .share-links.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .share-links a {
+      color: #fff;
+      margin: 0 0.5rem;
+      text-decoration: none;
+      font-size: 1.3rem;
+      transition: color 0.3s;
+    }
+    .share-links a:hover {
+      color: #bb86fc;
+    }
+    footer {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem;
+    }
+    footer a {
+      color: #ccc;
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
     }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2133210568167397" crossorigin="anonymous"></script>
@@ -176,30 +188,29 @@
 
     function revealFortune() {
       const fortuneBox = document.getElementById('fortune');
+      const shareLinks = document.getElementById('share-links');
       const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
       fortuneBox.textContent = randomFortune;
       fortuneBox.classList.add('show');
+      shareLinks.classList.add('show');
+
+      const encodedFortune = encodeURIComponent(randomFortune);
+      document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?text=${encodedFortune}`;
+      document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=https://your-site-url.com&quote=${encodedFortune}`;
+
+      fetch('https://hooks.zapier.com/hooks/catch/17921084/3p29m92/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fortune: randomFortune })
+      });
     }
   </script>
 </head>
 <body>
   <header>Your Mystical Fortune Awaits</header>
   <img class="hero-image" src="https://images.unsplash.com/photo-1579547621706-1a9c79d5ffa4?auto=format&fit=crop&w=1400&q=80" alt="Mystic illustration" />
-
- <div class="ad-banner">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2133210568167397"
-     crossorigin="anonymous"></script>
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-2133210568167397"
-       data-ad-slot="5503280485"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-</div>
-
 
   <div class="container">
     <p>Peer into the unknown and reveal your destiny.</p>
@@ -210,31 +221,29 @@
 
     <button onclick="revealFortune()">Reveal My Future</button>
     <div id="fortune" class="fortune-box"></div>
-
     <div class="ad-banner">
       <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-2133210568167397"
-           data-ad-slot="5503280485"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
+        style="display:block"
+        data-ad-client="ca-pub-2133210568167397"
+        data-ad-slot="5503280485"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
       <script>
-           (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
+    </div>
+    <div id="share-links" class="share-links">
+      <a id="twitter-share" href="#" target="_blank">Share on Twitter</a>
+      <a id="facebook-share" href="#" target="_blank">Share on Facebook</a>
     </div>
   </div>
 
-  <div class="ad-banner">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-2133210568167397"
-         data-ad-slot="6524718111"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
+  <footer>
+    <a href="#">Privacy Policy</a> |
+    <a href="#">Terms of Service</a> |
+    <a href="#">Disclaimer</a> |
+    <a href="#">Contact</a>
+  </footer>
 
   <div class="cookie-banner">
     <span>We use cookies to enhance your experience. By continuing, you agree to our use of cookies.</span>
@@ -242,3 +251,4 @@
   </div>
 </body>
 </html>
+
